@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
@@ -26,24 +25,34 @@ public class SuperheroController {
     private SuperheroService service;
 
     @PostMapping("/")
-    public Superhero save(@RequestBody HeroData heroData) {
+    public ResponseObject save(@RequestBody HeroData heroData) {
+
+        ResponseObject ro;
+        List<String> errorList = new ArrayList<String>();
+        boolean success = false;
 
         Superhero tmpSuperhero = new Superhero();
         // @TODO validate input parameters
         if(heroData == null){
-            System.out.println("superhero from RequestBody is null");
-            return tmpSuperhero;
+            success = false;
+            errorList.add("heroData from RequestBody is null");
+            ro = new ResponseObject(success, errorList, tmpSuperhero);            
+            return ro;
         }
 
         if(heroData.getHeroName() == null || heroData.getHeroName().isEmpty()){
-            System.out.println("heroData.heroName is null or empty");
-            return tmpSuperhero;
+            success = false;
+            errorList.add("heroName from RequestBody is null or empty");
+            ro = new ResponseObject(success, errorList, null);            
+            return ro;
         }
 
         tmpSuperhero.setHeroData(heroData);
+        tmpSuperhero = service.saveSuperhero(tmpSuperhero);
+        success = true;
+        ro = new ResponseObject(success, errorList, tmpSuperhero);
 
-
-        return service.saveSuperhero(tmpSuperhero);
+        return ro;
     }
 
     // Tested. Works!
