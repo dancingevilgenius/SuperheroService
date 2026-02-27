@@ -24,7 +24,7 @@ public class SuperheroController {
     @Autowired
     private SuperheroService service;
 
-    @PostMapping("/save")
+    @PostMapping("/")
     public Superhero save(@RequestBody HeroData heroData) {
 
         Superhero tmpSuperhero = new Superhero();
@@ -52,13 +52,13 @@ public class SuperheroController {
     }
 
     // Tested. Works!
-    @GetMapping("/findById")
-    public Superhero findById(@RequestParam Long id) {
+    @GetMapping("/{id}")
+    public Superhero findById(@PathVariable Long id) {
         // @TODO validate input parameters
         return service.findById(id);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public Superhero update(@RequestBody HeroData heroData, @PathVariable Long id) {
 
         Superhero tmpSuperhero = new Superhero();
@@ -78,8 +78,8 @@ public class SuperheroController {
         return service.updateSuperhero(existingSuperhero);
     }
 
-    @DeleteMapping("/deleteById")
-    public void deleteById(@RequestParam Long id) {
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id) {
         // @TODO validate input parameters
         System.out.println("Enter deleteById");
         Superhero tmpHero = new Superhero();
