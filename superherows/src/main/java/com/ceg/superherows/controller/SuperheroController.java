@@ -90,23 +90,36 @@ public class SuperheroController {
     }
 
     @PutMapping("/{id}")
-    public Superhero update(@RequestBody HeroData heroData, @PathVariable Long id) {
+    public ResponseObject update(@RequestBody HeroData heroData, @PathVariable Long id) {
 
         Superhero tmpSuperhero = new Superhero();
+        ResponseObject ro;
+        List<String> errorList = new ArrayList<String>();
+        boolean success = false;
+
 
         if(id == null){
-            System.out.println("input param id is null.");
-            return tmpSuperhero;
+            errorList.add("input param id is null.");
+            success = false;
+            ro = new ResponseObject(success, errorList, null);
+            return ro;
         }
 
         Superhero existingSuperhero = service.findById(id);
-        if(existingSuperhero == null){
-            System.out.println("No data found for id:" + id);
-            return tmpSuperhero;
+        if(existingSuperhero == null){            
+            errorList.add("No data found for id:" + id);
+            success = false;
+            ro = new ResponseObject(success, errorList, null);
+            return ro;
         }
+
         existingSuperhero.setHeroData(heroData);
 
-        return service.updateSuperhero(existingSuperhero);
+        Superhero newSuperhero = service.updateSuperhero(existingSuperhero);
+        success = true;
+        ro = new ResponseObject(success, errorList, newSuperhero);
+
+        return ro;
     }
 
     @DeleteMapping("/{id}")
