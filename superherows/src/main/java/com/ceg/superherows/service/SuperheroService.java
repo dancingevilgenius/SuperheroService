@@ -49,9 +49,7 @@ public class SuperheroService {
         Superhero existingSuperhero = dbsuperhero.get();
 
         // Modify db record with changes here.
-        existingSuperhero.setHeroName(newSuperhero.getHeroName());
-        existingSuperhero.setCivilianFirstName(newSuperhero.getCivilianFirstName());
-        existingSuperhero.setCivilianLastName(newSuperhero.getCivilianLastName());
+        existingSuperhero.setHeroData(newSuperhero.getHeroData());
 
         return repository.save(existingSuperhero);
     }
