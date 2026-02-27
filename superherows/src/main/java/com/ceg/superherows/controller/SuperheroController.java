@@ -1,5 +1,6 @@
 package com.ceg.superherows.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,9 +54,23 @@ public class SuperheroController {
 
     // Tested. Works!
     @GetMapping("/{id}")
-    public Superhero findById(@PathVariable Long id) {
-        // @TODO validate input parameters
-        return service.findById(id);
+    public ResponseObject findById(@PathVariable Long id) {
+
+        boolean success = false;
+        ResponseObject ro;
+        List<String> errorMsgs = new ArrayList<String>();
+        if(id == null || id < 0){
+            errorMsgs.add("id parameter is null or negative");
+            ro = new ResponseObject(success, errorMsgs, null);
+            return ro;
+        }
+        
+
+
+        Superhero sh = service.findById(id);
+        success = true;
+        ro = new ResponseObject(success, errorMsgs, sh);
+        return ro;
     }
 
     @PutMapping("/{id}")
