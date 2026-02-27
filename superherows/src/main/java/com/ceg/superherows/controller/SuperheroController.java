@@ -57,8 +57,16 @@ public class SuperheroController {
 
     // Tested. Works!
     @GetMapping("findAll")
-    public List<Superhero> findAll() {
-        return service.findAll();
+    public ResponseList findAll() {
+
+        boolean success = false;
+        
+        List<String> errorMsgs = new ArrayList<String>();
+
+        List<Superhero> list = service.findAll();
+
+        success = true;
+        return new ResponseList(success, errorMsgs, list);
     }
 
     // Tested. Works!
@@ -123,13 +131,34 @@ public class SuperheroController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Long id) {
-        // @TODO validate input parameters
-        System.out.println("Enter deleteById");
+    public ResponseObject deleteById(@PathVariable Long id) {
+
+        ResponseObject ro;
+        List<String> errorList = new ArrayList<String>();
+        boolean success = false;
+
+
+        if(id == null || id < 0){
+            success = false;
+            errorList.add("input param id is null or negative");
+            return new ResponseObject(success, errorList, null);
+        }
+
+
+        Superhero existingSuperhero = service.findById(id);
+        if(existingSuperhero == null || existingSuperhero.getId() == null || existingSuperhero.getHeroData() == null){            
+            errorList.add("No record found for id:" + id);
+            success = false;
+            return new ResponseObject(success, errorList, null);
+        }
+
+
         Superhero tmpHero = new Superhero();
         tmpHero.setId(id);
         service.deleteSuperhero(tmpHero);
-        System.out.println("Exit deleteById");
+        
+        success = true;
+        return new ResponseObject(success, errorList, null);
     }
 
 }
