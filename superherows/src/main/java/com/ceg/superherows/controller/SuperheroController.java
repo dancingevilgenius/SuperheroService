@@ -13,9 +13,9 @@ import com.ceg.superherows.service.SuperheroService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api")
@@ -58,12 +58,24 @@ public class SuperheroController {
         return service.findById(id);
     }
 
-    @PutMapping("/update")
-    public Superhero update(@RequestBody Superhero superhero) {
+    @PutMapping("/update/{id}")
+    public Superhero update(@RequestBody HeroData heroData, @PathVariable Long id) {
 
-        // @TODO validate input parameters
+        Superhero tmpSuperhero = new Superhero();
 
-        return service.updateSuperhero(superhero);
+        if(id == null){
+            System.out.println("input param id is null.");
+            return tmpSuperhero;
+        }
+
+        Superhero existingSuperhero = service.findById(id);
+        if(existingSuperhero == null){
+            System.out.println("No data found for id:" + id);
+            return tmpSuperhero;
+        }
+        existingSuperhero.setHeroData(heroData);
+
+        return service.updateSuperhero(existingSuperhero);
     }
 
     @DeleteMapping("/deleteById")
