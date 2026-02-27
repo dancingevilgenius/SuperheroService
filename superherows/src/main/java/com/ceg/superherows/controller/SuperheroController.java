@@ -68,6 +68,13 @@ public class SuperheroController {
 
 
         Superhero sh = service.findById(id);
+        if(sh == null || sh.getId() ==  null || sh.getHeroData() == null){
+            success = false;
+            errorMsgs.add("No record found for id:" + id);
+            ro = new ResponseObject(success, errorMsgs, sh);
+            return ro;
+        }
+
         success = true;
         ro = new ResponseObject(success, errorMsgs, sh);
         return ro;
