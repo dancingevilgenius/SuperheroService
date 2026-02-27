@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ceg.superherows.entity.HeroData;
 import com.ceg.superherows.entity.Superhero;
 import com.ceg.superherows.service.SuperheroService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,18 +25,33 @@ public class SuperheroController {
     private SuperheroService service;
 
     @PostMapping("/save")
-    public Superhero save(@RequestBody Superhero superhero) {
+    public Superhero save(@RequestBody HeroData heroData) {
 
+        Superhero tmpSuperhero = new Superhero();
         // @TODO validate input parameters
+        if(heroData == null){
+            System.out.println("superhero from RequestBody is null");
+            return tmpSuperhero;
+        }
 
-        return service.saveSuperhero(superhero);
+        if(heroData.getHeroName() == null || heroData.getHeroName().isEmpty()){
+            System.out.println("heroData.heroName is null or empty");
+            return tmpSuperhero;
+        }
+
+        tmpSuperhero.setHeroData(heroData);
+
+
+        return service.saveSuperhero(tmpSuperhero);
     }
 
+    // Tested. Works!
     @GetMapping("findAll")
     public List<Superhero> findAll() {
         return service.findAll();
     }
 
+    // Tested. Works!
     @GetMapping("/findById")
     public Superhero findById(@RequestParam Long id) {
         // @TODO validate input parameters
@@ -53,10 +69,11 @@ public class SuperheroController {
     @DeleteMapping("/deleteById")
     public void deleteById(@RequestParam Long id) {
         // @TODO validate input parameters
-
+        System.out.println("Enter deleteById");
         Superhero tmpHero = new Superhero();
         tmpHero.setId(id);
         service.deleteSuperhero(tmpHero);
+        System.out.println("Exit deleteById");
     }
 
 }

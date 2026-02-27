@@ -6,10 +6,15 @@ import java.util.List;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.springframework.boot.jackson.autoconfigure.JacksonProperties.Json;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -18,10 +23,12 @@ import jakarta.persistence.Table;
 public class Superhero {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 
-    @JdbcTypeCode(SqlTypes.JSON) 
+    @JdbcTypeCode(SqlTypes.JSON)
+    //@Type(Json.class)
     @Column(columnDefinition = "jsonb") // Explicitly define the column as JSONB in the DB
     private HeroData heroData; 
 
